@@ -19,11 +19,11 @@ const isReal = (filename) => filename !== '<input>' && filename !== '<text>'
 export const noDumpFile = {
   meta: {
     type: 'problem',
-    docs: { description: 'Ни файлов-свалок, ни каталогов-свалок' },
+    docs: { description: 'No dumping-ground files or directories' },
     schema: [],
     messages: {
-      file: 'GRAIN: "{{stem}}" — свалка по определению. Разложи по ролям: {{roles}}. Чистые вычисления — <домен>.pure.ts.',
-      dir: 'GRAIN: каталог "{{dir}}" описывает технику, а не домен. Режь по доменам.',
+      file: 'GRAIN: "{{stem}}" is a dumping ground by definition. Split it by role: {{roles}}. Pure computations go to <domain>.pure.ts.',
+      dir: 'GRAIN: directory "{{dir}}" describes a technique, not a domain. Split by domain.',
     },
   },
   create(context) {
@@ -50,10 +50,10 @@ export const noDumpFile = {
 export const dirDepth = {
   meta: {
     type: 'problem',
-    docs: { description: 'Иерархия каталогов не глубже предела' },
+    docs: { description: 'Directory hierarchy no deeper than the limit' },
     schema: [],
     messages: {
-      depth: 'GRAIN: вложенность {{depth}} при пределе {{max}} — глубже никто не ищет, подними уровень выше.',
+      depth: 'GRAIN: nesting {{depth}} exceeds the limit of {{max}} — nobody looks deeper, move it a level up.',
     },
   },
   create(context) {
@@ -77,11 +77,11 @@ export const dirDepth = {
 export const fileRole = {
   meta: {
     type: 'problem',
-    docs: { description: 'Файл несёт одну роль из закрытого списка' },
+    docs: { description: 'A file carries one role from a closed list' },
     schema: [],
     messages: {
-      role: 'GRAIN: "{{stem}}" без роли. Формат — <домен>.<роль>.ts, роли: {{roles}}.',
-      kebab: 'GRAIN: "{{stem}}" — имя файла в kebab-case.',
+      role: 'GRAIN: "{{stem}}" has no role. Format: <domain>.<role>.ts, roles: {{roles}}.',
+      kebab: 'GRAIN: "{{stem}}" — file names are kebab-case.',
     },
   },
   create(context) {

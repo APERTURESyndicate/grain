@@ -17,7 +17,7 @@ function findDumpedDir(file: string): string | null {
     .slice(0, -1)
     .find((folder) => grain.dirsBanned.has(folder))
   if (dumped === undefined) return null
-  return `каталог "${dumped}" описывает технику, а не домен — режь по доменам`
+  return `directory "${dumped}" describes a technique, not a domain — split by domain`
 }
 
 function findDepthFault(file: string): string | null {
@@ -29,7 +29,7 @@ function findDepthFault(file: string): string | null {
   if (inside.some((folder) => grain.dirsFramework.has(folder))) return null
   const depth = inside.length
   if (depth <= grain.maxDirDepth) return null
-  return `вложенность ${String(depth)} при пределе ${String(grain.maxDirDepth)} — подними уровень выше`
+  return `nesting ${String(depth)} exceeds the limit of ${String(grain.maxDirDepth)} — move it a level up`
 }
 
 function findNameFault(file: string): string | null {
@@ -42,18 +42,18 @@ function findNameFault(file: string): string | null {
   const isTyped = name.endsWith('.kt') || name.endsWith('.swift')
   const shape = isTyped ? pascal : name.endsWith('.rs') || name.endsWith('.sql') ? snake : kebab
   const shapeName = isTyped ? 'PascalCase' : shape === snake ? 'snake_case' : 'kebab-case'
-  if (!shape.test(stem)) return `имя файла "${stem}" — ${shapeName}`
+  if (!shape.test(stem)) return `file name "${stem}" must be ${shapeName}`
   if (generated.test(name) || roleless.test(name)) return null
   const parts = name.split('.')
   const role = parts.length >= 3 ? parts[parts.length - 2] : null
   if (role !== null && grain.fileRoles.has(role)) return null
-  return `нет роли в имени: <домен>.<роль>.ts из набора ${[...grain.fileRoles].join(' ')}`
+  return `no role in the name: <domain>.<role>.ts, roles: ${[...grain.fileRoles].join(' ')}`
 }
 
 function findDumpedFile(file: string): string | null {
   const stem = basename(file).split('.')[0] ?? ''
   if (!grain.filesBanned.has(stem)) return null
-  return `"${stem}" — свалка по определению; разложи по ролям (${[...grain.fileRoles].join(' ')}), чистые вычисления — <домен>.pure.ts`
+  return `"${stem}" is a dumping ground by definition; split it by role (${[...grain.fileRoles].join(' ')}), pure computations go to <domain>.pure.ts`
 }
 
 /** Путь, на котором стандарт неприменим: сборка, зависимости, генерируемый код. */

@@ -26,11 +26,11 @@ const isNumberLiteral = (node) => node?.type === 'Literal' && typeof node.value 
 export const unitSuffix = {
   meta: {
     type: 'problem',
-    docs: { description: 'Числовое имя несёт единицу измерения' },
+    docs: { description: 'A numeric name carries its unit of measure' },
     schema: [],
     messages: {
       missing:
-        'GRAIN: "{{name}}" — число без единицы. Добавь суффикс ({{sample}}) или назови безразмерной величиной.',
+        'GRAIN: "{{name}}" is a number without a unit. Add a suffix ({{sample}}) or name it as a dimensionless quantity.',
     },
   },
   create(context) {

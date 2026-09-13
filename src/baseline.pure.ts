@@ -39,9 +39,9 @@ export function formatBaseline(findings: Finding[], version: string): string {
     })
     .sort((one, other) => one.localeCompare(other))
   return [
-    `# GRAIN ${version} — долг, принятый как данность.`,
-    '# Гейт пропускает ровно эти нарушения и валит любое сверх них.',
-    '# Строка: <файл> <правило> <сколько>. Перезаписывается `grain --baseline`.',
+    `# GRAIN ${version} — debt taken as given.`,
+    '# The gate lets exactly these violations through and fails anything beyond them.',
+    '# Line: <file> <rule> <count>. Rewritten by `grain --all --baseline`.',
     '',
     ...rows,
     '',

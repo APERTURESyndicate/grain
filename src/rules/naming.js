@@ -26,14 +26,14 @@ function readFunctionName(node) {
 export const verbLexicon = {
   meta: {
     type: 'problem',
-    docs: { description: 'Имя функции начинается с глагола из словаря GRAIN' },
+    docs: { description: 'A function name starts with a verb from the GRAIN lexicon' },
     schema: [],
     messages: {
-      banned: 'GRAIN: глагол "{{verb}}" запрещён — {{fix}}.',
+      banned: 'GRAIN: the verb "{{verb}}" is banned — {{fix}}.',
       unknown:
-        'GRAIN: "{{verb}}" не из словаря глаголов. Разрешены: {{sample}} (полный список — grain.synx).',
+        'GRAIN: "{{verb}}" is not in the verb lexicon. Allowed: {{sample}} (full list in grain.synx).',
       answer:
-        'GRAIN: "{{name}}" обещает ответ да/нет, а возвращает {{returned}}. Префикс {{prefixes}} — только у булевых.',
+        'GRAIN: "{{name}}" promises a yes/no answer but returns {{returned}}. The prefixes {{prefixes}} belong to booleans only.',
     },
   },
   create(context) {
@@ -66,7 +66,7 @@ export const verbLexicon = {
       }
       if (grain.verbs.has(verb)) return
       if (grain.verbsBanned.has(verb)) {
-        const fix = grain.verbReplacements[verb] ?? 'назови действие по существу'
+        const fix = grain.verbReplacements[verb] ?? 'name the actual action'
         context.report({ node: found.target, messageId: 'banned', data: { verb, fix } })
         return
       }
@@ -84,10 +84,10 @@ export const verbLexicon = {
 export const booleanPrefix = {
   meta: {
     type: 'problem',
-    docs: { description: 'Булево имя начинается с is/has/can/should/was/will/must' },
+    docs: { description: 'A boolean name starts with is/has/can/should/was/will/must' },
     schema: [],
     messages: {
-      prefix: 'GRAIN: булево "{{name}}" — нужен префикс {{prefixes}}.',
+      prefix: 'GRAIN: boolean "{{name}}" needs a prefix: {{prefixes}}.',
     },
   },
   create(context) {
@@ -132,12 +132,12 @@ export const booleanPrefix = {
 export const noVagueName = {
   meta: {
     type: 'problem',
-    docs: { description: 'Имя не заканчивается словом-пустышкой' },
+    docs: { description: 'A name does not end with an empty word' },
     schema: [],
     messages: {
-      vague: 'GRAIN: "{{name}}" — слово "{{word}}" ничего не сообщает. Назови по домену.',
-      adjective: 'GRAIN: "{{name}}" — самопохвала "{{word}}" в имени не несёт смысла.',
-      abbrev: 'GRAIN: "{{name}}" — пиши "{{full}}" вместо "{{word}}".',
+      vague: 'GRAIN: "{{name}}" — the word "{{word}}" says nothing. Name it by the domain.',
+      adjective: 'GRAIN: "{{name}}" — the self-praise "{{word}}" carries no meaning in a name.',
+      abbrev: 'GRAIN: "{{name}}" — write "{{full}}" instead of "{{word}}".',
     },
   },
   create(context) {

@@ -10,15 +10,15 @@ const tagged = new RegExp(`^(${grain.commentTags.join('|')}):\\s+\\S`)
 const escapeHatch = new RegExp(`^${grain.commentEscape}\\s+\\S+\\s+—\\s+\\S`)
 
 function findCommentFault(body: string, isContinuation: boolean): string | null {
-  if (emoji.test(body)) return 'эмодзи в комментарии'
-  if (divider.test(body)) return 'ASCII-разделитель: структуру задаёт разбиение на файлы'
+  if (emoji.test(body)) return 'emoji in a comment'
+  if (divider.test(body)) return 'ASCII divider: structure comes from splitting into files'
   if (tooling.test(body) || body === '') return null
   if (body.startsWith(grain.commentEscape)) {
-    return escapeHatch.test(body) ? null : `форма: ${grain.commentEscape} <правило> — <причина>`
+    return escapeHatch.test(body) ? null : `form: ${grain.commentEscape} <rule> — <reason>`
   }
-  if (leftover.test(body)) return 'незаконченная работа вместо комментария: доделай или заведи задачу'
+  if (leftover.test(body)) return 'unfinished work instead of a comment: finish it or file a task'
   if (tagged.test(body) || isContinuation) return null
-  return `комментарий без тега (${grain.commentTags.map((tag) => `${tag}:`).join(' ')}) — или это пересказ кода`
+  return `comment without a tag (${grain.commentTags.map((tag) => `${tag}:`).join(' ')}) — or it retells the code`
 }
 
 function isInsideLiteral(before: string): boolean {
@@ -45,7 +45,7 @@ export function listTextFindings(file: string, source: string, commentMark: stri
       makeFinding(
         [file, lines.length],
         'max-lines',
-        `${String(lines.length)} строк при пределе ${String(grain.maxFileLines)} — в файле больше одной роли`,
+        `${String(lines.length)} lines against a limit of ${String(grain.maxFileLines)} — the file holds more than one role`,
       ),
     )
   }

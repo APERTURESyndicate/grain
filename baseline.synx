@@ -1,6 +1,6 @@
-# GRAIN 1.2 — долг, принятый как данность.
-# Гейт пропускает ровно эти нарушения и валит любое сверх них.
-# Строка: <файл> <правило> <сколько>. Перезаписывается `grain --baseline`.
+# GRAIN 1.2 — debt taken as given.
+# The gate lets exactly these violations through and fails anything beyond them.
+# Line: <file> <rule> <count>. Rewritten by `grain --all --baseline`.
 
 bin/grain.entry.ts no-vague-name 1
 bin/grain.entry.ts unit-suffix 1

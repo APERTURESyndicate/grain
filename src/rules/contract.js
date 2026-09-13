@@ -11,13 +11,13 @@ const mentionsNothing = (text) => /\bnull\b|\bundefined\b|\bvoid\b/.test(text)
 export const findGetContract = {
   meta: {
     type: 'problem',
-    docs: { description: 'find* допускает null, get* — нет' },
+    docs: { description: 'find* admits null, get* does not' },
     schema: [],
     messages: {
       findNotNullable:
-        'GRAIN: find* обязан допускать null в типе. Гарантируешь значение — это get{{tail}}.',
+        'GRAIN: find* must admit null in its type. If the value is guaranteed, this is get{{tail}}.',
       getNullable:
-        'GRAIN: get* обязан гарантировать значение. Может не найтись — это find{{tail}}.',
+        'GRAIN: get* must guarantee a value. If it may be missing, this is find{{tail}}.',
     },
   },
   create(context) {
@@ -52,10 +52,10 @@ export const findGetContract = {
 export const failCode = {
   meta: {
     type: 'problem',
-    docs: { description: 'Код доменной ошибки — домен.предмет.причина' },
+    docs: { description: 'A domain failure code is domain.subject.reason' },
     schema: [],
     messages: {
-      shape: 'GRAIN: код "{{code}}" не в форме домен.предмет.причина (например auth.token.expired).',
+      shape: 'GRAIN: code "{{code}}" is not shaped domain.subject.reason (for example auth.token.expired).',
     },
   },
   create(context) {
@@ -75,12 +75,12 @@ export const failCode = {
 export const catchMustAct = {
   meta: {
     type: 'problem',
-    docs: { description: 'catch либо бросает дальше, либо возвращает отказ' },
+    docs: { description: 'catch either rethrows or returns a failure' },
     schema: [],
     messages: {
-      empty: 'GRAIN: пустой catch прячет отказ. Пробрось дальше или верни типизированный отказ.',
+      empty: 'GRAIN: an empty catch hides the failure. Rethrow or return a typed failure.',
       logOnly:
-        'GRAIN: catch, который только логирует и продолжает, превращает отказ в тишину. Пробрось или верни отказ.',
+        'GRAIN: a catch that only logs and continues turns a failure into silence. Rethrow or return a failure.',
     },
   },
   create(context) {
@@ -119,11 +119,11 @@ export const catchMustAct = {
 export const noRedundantTemp = {
   meta: {
     type: 'suggestion',
-    docs: { description: 'Переменная, объявленная только чтобы её вернуть' },
+    docs: { description: 'A variable declared only to be returned' },
     schema: [],
     fixable: 'code',
     messages: {
-      temp: 'GRAIN: "{{name}}" существует одну строку — верни выражение сразу.',
+      temp: 'GRAIN: "{{name}}" lives for one line — return the expression directly.',
     },
   },
   create(context) {
@@ -159,10 +159,10 @@ export const noRedundantTemp = {
 export const noDefaultExport = {
   meta: {
     type: 'problem',
-    docs: { description: 'Только именованные экспорты' },
+    docs: { description: 'Named exports only' },
     schema: [],
     messages: {
-      named: 'GRAIN: только именованные экспорты — имя должно быть одинаковым на обоих концах.',
+      named: 'GRAIN: named exports only — the name must be the same on both ends.',
     },
   },
   create(context) {

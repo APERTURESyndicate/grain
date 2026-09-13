@@ -32,7 +32,7 @@ function findHookDir(): string | null {
 
 function findHookFault(): string | null {
   if (findHookDir() !== null) return null
-  return 'нет pre-commit, запускающего grain (.githooks, .husky или core.hooksPath) — коммит ничем не остановить'
+  return 'no pre-commit runs grain (.githooks, .husky or core.hooksPath) — nothing stops a commit'
 }
 
 // why: файл хука в репозитории ничего не гарантирует — git его не увидит, пока
@@ -43,7 +43,7 @@ function findWiringFault(): string | null {
   if (dir === null || dir === '.git/hooks') return null
   const wired = findConfiguredHooksDir()
   if (wired === dir) return null
-  return `хук лежит в ${dir}, а git смотрит в ${wired ?? '.git/hooks'} — git config core.hooksPath ${dir}`
+  return `the hook lives in ${dir} but git looks in ${wired ?? '.git/hooks'} — git config core.hooksPath ${dir}`
 }
 
 function findCiFault(): string | null {
@@ -52,7 +52,7 @@ function findCiFault(): string | null {
     existsSync(flows) && readdirSync(flows).some((file) => isRunningGrain(join(flows, file)))
   const isGitlab = isRunningGrain('.gitlab-ci.yml')
   if (isGithub || isGitlab) return null
-  return 'ни один workflow (.github/workflows, .gitlab-ci.yml) не запускает grain — проверки в CI не существует'
+  return 'no workflow (.github/workflows, .gitlab-ci.yml) runs grain — there is no check in CI'
 }
 
 const checked = new RegExp(`\\.(${grain.filesChecked.join('|')})$`)
@@ -76,8 +76,8 @@ function listAdoptFaults(files: string[]): string[] {
   ]
   if (missed.length === 0) return []
   const shown = missed.slice(0, 5).join(', ')
-  const rest = missed.length > 5 ? ` и ещё ${String(missed.length - 5)}` : ''
-  return [`вне списка внедрения: ${shown}${rest}`]
+  const rest = missed.length > 5 ? ` and ${String(missed.length - 5)} more` : ''
+  return [`outside the adoption list: ${shown}${rest}`]
 }
 
 /**

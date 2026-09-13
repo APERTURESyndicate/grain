@@ -51,7 +51,7 @@ const shapes = ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.mjs', '**/*.
 function listMessageFindings(file: string, messages: Message[], known: Set<string>): Finding[] {
   return messages.flatMap((message) => {
     if (message.fatal === true) {
-      return [makeFinding([file, message.line ?? 1], 'parse', `разбор не удался: ${message.message}`)]
+      return [makeFinding([file, message.line ?? 1], 'parse', `parse failed: ${message.message}`)]
     }
     if (message.ruleId === null || !known.has(message.ruleId)) return []
     const rule = message.ruleId.replace(/^grain\//, '')

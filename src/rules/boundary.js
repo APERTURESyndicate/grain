@@ -13,12 +13,12 @@ const nondeterministic = new Set(grain.effectsNondeterministic)
 export const boundaryEffect = {
   meta: {
     type: 'problem',
-    docs: { description: 'Время, случайность и окружение берутся только на границе' },
+    docs: { description: 'Time, randomness and the environment are taken only at the boundary' },
     schema: [],
     messages: {
       effect:
-        'GRAIN: "{{source}}" внутри {{role}}-файла. Недетерминизм живёт на границе ({{boundary}}) и приходит в домен аргументом — иначе код нельзя ни протестировать без моков, ни воспроизвести по логам.',
-      date: 'GRAIN: new Date() внутри {{role}}-файла. Момент времени приходит аргументом.',
+        'GRAIN: "{{source}}" inside a {{role}} file. Nondeterminism lives at the boundary ({{boundary}}) and enters the domain as an argument — otherwise the code can neither be tested without mocks nor replayed from logs.',
+      date: 'GRAIN: new Date() inside a {{role}} file. The moment in time arrives as an argument.',
     },
   },
   create(context) {
@@ -51,11 +51,11 @@ export const boundaryEffect = {
 export const inwardImport = {
   meta: {
     type: 'problem',
-    docs: { description: 'Зависимости направлены внутрь, к домену' },
+    docs: { description: 'Dependencies point inward, toward the domain' },
     schema: [],
     messages: {
       outward:
-        'GRAIN: {{role}}-файл импортирует {{imported}}-файл. Разрешено: {{allowed}}. Домен не знает о том, кто его вызывает и через что ходит наружу.',
+        'GRAIN: a {{role}} file imports a {{imported}} file. Allowed: {{allowed}}. The domain does not know who calls it or how it reaches outside.',
     },
   },
   create(context) {
@@ -103,11 +103,11 @@ const isAwaitDeclaration = (statement) =>
 export const explicitParallel = {
   meta: {
     type: 'problem',
-    docs: { description: 'Независимые ожидания запускаются параллельно' },
+    docs: { description: 'Independent awaits run in parallel' },
     schema: [],
     messages: {
       serial:
-        'GRAIN: этот await не зависит от предыдущего — они выполняются по очереди без причины. Запусти параллельно: const [{{names}}] = await Promise.all([…]).',
+        'GRAIN: this await does not depend on the previous one — they run in sequence for no reason. Run them in parallel: const [{{names}}] = await Promise.all([…]).',
     },
   },
   create(context) {

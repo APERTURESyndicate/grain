@@ -58,14 +58,14 @@ const entries = readEntries()
 
 function readList(key) {
   const value = entries.get(key)
-  if (value === undefined) throw new Error(`grain.synx: нет ключа ${key}`)
+  if (value === undefined) throw new Error(`grain.synx: missing key ${key}`)
   return value
 }
 
 function readNumber(key) {
   const [first] = readList(key)
   const parsed = Number(first)
-  if (Number.isNaN(parsed)) throw new Error(`grain.synx: ${key} не число`)
+  if (Number.isNaN(parsed)) throw new Error(`grain.synx: ${key} is not a number`)
   return parsed
 }
 
@@ -84,28 +84,28 @@ const verbGroups = [
 
 /** Чем заменить запрещённый глагол — подсказка в тексте ошибки. */
 const verbReplacements = {
-  handle: 'назови действие: submitLogin, retryPayout',
-  process: 'derive / apply / transform-глагол по существу',
-  manage: 'разбей на конкретные действия',
-  do: 'назови действие',
-  perform: 'назови действие',
+  handle: 'name the action: submitLogin, retryPayout',
+  process: 'derive / apply / the transform verb that fits',
+  manage: 'split into concrete actions',
+  do: 'name the action',
+  perform: 'name the action',
   execute: 'apply / start',
-  check: 'is* для ответа, assert* для инварианта',
-  init: 'start (процесс) / make (значение)',
+  check: 'is* for an answer, assert* for an invariant',
+  init: 'start (a process) / make (a value)',
   update: 'save / apply / set',
-  fetch: 'read (I/O) / load (агрегат)',
+  fetch: 'read (I/O) / load (an aggregate)',
   retrieve: 'get / find',
   calculate: 'derive',
   compute: 'derive',
   generate: 'make',
   build: 'make',
   setup: 'ensure / start',
-  validate: 'assert (бросает) / parse (возвращает разбор)',
+  validate: 'assert (throws) / parse (returns the parsed value)',
   transform: 'derive / format',
   convert: 'format / encode',
   prepare: 'make',
   determine: 'resolve',
-  deal: 'назови действие',
+  deal: 'name the action',
   run: 'start / apply',
   trigger: 'emit / send',
 }

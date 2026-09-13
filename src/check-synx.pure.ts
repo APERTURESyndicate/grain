@@ -11,21 +11,21 @@ const boolValue = /^(true|false)$/
 const units = new Set([...grain.units].map((unit) => unit.toLowerCase()))
 
 function findKeyFault(key: string, modifiers: string, value: string): string | null {
-  if (!snake.test(key)) return `ключ "${key}" — snake_case`
+  if (!snake.test(key)) return `key "${key}" must be snake_case`
   const words = splitWords(key)
   const first = words[0]
   const last = words[words.length - 1]
   if (last !== undefined && grain.nounsBanned.has(last)) {
-    return `ключ "${key}": слово "${last}" ничего не сообщает`
+    return `key "${key}": the word "${last}" says nothing`
   }
   const isBoolean = boolType.test(modifiers) || boolValue.test(value)
   if (isBoolean && first !== undefined && !grain.boolPrefixes.includes(first)) {
-    return `булев ключ "${key}" — префикс ${grain.boolPrefixes.map((prefix) => `${prefix}_`).join('/')}`
+    return `boolean key "${key}" needs a prefix: ${grain.boolPrefixes.map((prefix) => `${prefix}_`).join('/')}`
   }
   const isNumber = intType.test(modifiers) || numberValue.test(value)
   if (!isNumber || key.length <= 2) return null
   if (last !== undefined && (units.has(last) || grain.unitsExempt.has(last))) return null
-  return `число "${key}" без единицы — _ms, _sec, _bytes, _count, _pct`
+  return `number "${key}" has no unit — _ms, _sec, _bytes, _count, _pct`
 }
 
 /**

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Every message the checker prints — findings, rule descriptions, the report, the baseline header — is in English. The standard text in `docs/` stays in Russian; the English version is on the docs site.
+
 ## 1.2.0
 
 First public release. The standard and its checker were extracted from the APERTURESyndicate platform, where GRAIN 1.2 has been enforced on every commit since 2026-09-05.

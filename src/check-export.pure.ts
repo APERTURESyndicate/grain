@@ -53,7 +53,7 @@ export function listDeadExports(sources: Map<string, string>): Finding[] {
         makeFinding(
           [file, line],
           'no-dead-export',
-          `"${name}" не упоминается больше нигде — удали или не экспортируй (git помнит)`,
+          `"${name}" is mentioned nowhere else — delete it or stop exporting it (git remembers)`,
         ),
       )
     }

@@ -27,12 +27,12 @@ function findNameFault(name: string): string | null {
   const words = splitWords(name)
   const last = words[words.length - 1]
   if (last !== undefined && grain.nounsBanned.has(last)) {
-    return `"${name}": слово "${last}" ничего не сообщает — назови по домену`
+    return `"${name}": the word "${last}" says nothing — name it by the domain`
   }
   const short = words.find((word) => abbrevFix.has(word))
-  if (short !== undefined) return `"${name}": пиши "${abbrevFix.get(short) ?? ''}" вместо "${short}"`
+  if (short !== undefined) return `"${name}": write "${abbrevFix.get(short) ?? ''}" instead of "${short}"`
   const boastful = words.find((word) => grain.adjectivesBanned.has(word))
-  if (boastful !== undefined) return `"${name}": самопохвала "${boastful}" в имени не несёт смысла`
+  if (boastful !== undefined) return `"${name}": the self-praise "${boastful}" carries no meaning in a name`
   return null
 }
 
@@ -40,9 +40,9 @@ function findVerbFault(name: string): string | null {
   const [verb] = splitWords(name)
   if (verb === undefined || grain.verbs.has(verb) || grain.boolPrefixes.includes(verb)) return null
   if (grain.verbsBanned.has(verb)) {
-    return `глагол "${verb}" запрещён — ${grain.verbReplacements[verb] ?? 'назови действие по существу'}`
+    return `the verb "${verb}" is banned — ${grain.verbReplacements[verb] ?? 'name the actual action'}`
   }
-  return `"${verb}" не из словаря глаголов GRAIN — см. grain.synx`
+  return `"${verb}" is not in the GRAIN verb lexicon — see grain.synx`
 }
 
 function findValueFault(name: string, kind: string | undefined, value: string): string | null {
@@ -54,13 +54,13 @@ function findValueFault(name: string, kind: string | undefined, value: string): 
     value.startsWith('true') ||
     value.startsWith('false')
   if (isBoolean && first !== undefined && !grain.boolPrefixes.includes(first)) {
-    return `булево "${name}" — нужен префикс ${grain.boolPrefixes.join('/')}`
+    return `boolean "${name}" needs a prefix: ${grain.boolPrefixes.join('/')}`
   }
   const isNumber = (kind !== undefined && numberType.test(kind)) || numberValue.test(value)
   if (!isNumber || name.length <= 2) return null
   const units = new Set([...grain.units].map((unit) => unit.toLowerCase()))
   if (last === undefined || units.has(last) || grain.unitsExempt.has(last)) return null
-  return `"${name}" — число без единицы (${[...grain.units].slice(0, 6).join(', ')}, …)`
+  return `"${name}" is a number without a unit (${[...grain.units].slice(0, 6).join(', ')}, …)`
 }
 
 /** Kotlin и Swift: тот же словарь глаголов, булевы префиксы, единицы, пустые имена. */

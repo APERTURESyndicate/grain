@@ -11,9 +11,9 @@ function findSubjectFault(subject: string): string | null {
   const words = splitWords(tail)
   const last = words[words.length - 1] ?? tail
   if (grain.eventVerbs.has(last)) return null
-  return `"${subject}": "${tail}" — событие называется свершившимся фактом (${[...grain.eventVerbs]
+  return `"${subject}": "${tail}" — an event is named as an accomplished fact (${[...grain.eventVerbs]
     .slice(0, 6)
-    .join(', ')}, …), а не командой или существительным`
+    .join(', ')}, …), not as a command or a noun`
 }
 
 /** Имена событий шины: закрытый словарь причастий, как и словарь глаголов в коде. */

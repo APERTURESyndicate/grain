@@ -99,8 +99,8 @@ function writeReport(findings: Finding[], level: number): void {
     )
   }
   process.stdout.write(
-    `\nGRAIN ${grain.version} L${String(level)}: ${String(findings.length)} нарушений.\n` +
-      `Стандарт — ${grain.docsUrl}\nОсознанное исключение — // ${grain.commentEscape} <правило> — <причина>\n`,
+    `\nGRAIN ${grain.version} L${String(level)}: ${String(findings.length)} violations.\n` +
+      `The standard — ${grain.docsUrl}\nA deliberate exception — // ${grain.commentEscape} <rule> — <reason>\n`,
   )
 }
 
@@ -122,8 +122,8 @@ if (argv.includes('--audit')) {
   for (const fault of faults) process.stdout.write(`  L${String(level)}  ${fault.message}\n`)
   process.stdout.write(
     faults.length === 0
-      ? `GRAIN ${grain.version}: уровень L${String(level)} обеспечен машинно — хук, CI, полный охват.\n`
-      : `GRAIN ${grain.version}: объявлен L${String(level)}, но гарантии нет — ${String(faults.length)} причин выше.\n`,
+      ? `GRAIN ${grain.version}: level L${String(level)} is held by machine — hook, CI, full coverage.\n`
+      : `GRAIN ${grain.version}: L${String(level)} is declared but not guaranteed — ${String(faults.length)} reasons above.\n`,
   )
   process.exit(faults.length > 0 ? 1 : 0)
 }
@@ -163,7 +163,7 @@ const baselineFile =
     : resolve(startedAt, process.env.GRAIN_BASELINE)
 if (argv.includes('--baseline')) {
   writeFileSync(baselineFile, formatBaseline(findings, grain.version), 'utf-8')
-  process.stdout.write(`GRAIN ${grain.version}: долг записан — ${String(findings.length)} нарушений.\n`)
+  process.stdout.write(`GRAIN ${grain.version}: debt recorded — ${String(findings.length)} violations.\n`)
   process.exit(0)
 }
 
@@ -176,8 +176,8 @@ const excess = listExcess(findings, ledger)
 const owedCount = findings.length - excess.length
 // why: на выборке файлов «погашено» посчиталось бы по всему долгу и всегда врало
 const repaidCount = argv.includes('--all') ? countRepaid(findings, ledger) : 0
-const repaid = repaidCount > 0 ? `, погашено ${String(repaidCount)} — grain --baseline` : ''
-const debt = owedCount > 0 ? `В долгу: ${String(owedCount)}${repaid}.` : ''
+const repaid = repaidCount > 0 ? `, ${String(repaidCount)} repaid — grain --all --baseline` : ''
+const debt = owedCount > 0 ? `In debt: ${String(owedCount)}${repaid}.` : ''
 
 if (argv.includes('--stat')) {
   process.stdout.write(`${formatUnitStat(findings)}
@@ -189,13 +189,13 @@ if (argv.includes('--stat')) {
   process.stdout.write(
     findings.length === 0
       ? `${badge}\n`
-      : `Бейдж не выдан: ${String(excess.length)} сверх долга и ${String(owedCount)} в долгу на L${String(level)}.\n`,
+      : `No badge: ${String(excess.length)} beyond the debt and ${String(owedCount)} in debt at L${String(level)}.\n`,
   )
 } else if (excess.length > 0) {
   writeReport(excess, level)
 } else {
   process.stdout.write(
-    `GRAIN ${grain.version} L${String(level)}: чисто (${String(adopted.length)} файлов). ${debt}\n`,
+    `GRAIN ${grain.version} L${String(level)}: clean (${String(adopted.length)} files). ${debt}\n`,
   )
 }
 process.exit(excess.length > 0 ? 1 : 0)

@@ -30,20 +30,20 @@ export function formatUnitStat(findings: Finding[]): string {
   const shown = rows.map(
     (row) => `  ${String(row.total).padStart(6)}  ${row.unit.padEnd(34)}  ${row.worst}`,
   )
-  return [...shown, '', 'Сверху — те, кому до чистоты ближе всего.'].join('\n')
+  return [...shown, '', 'Top rows are the closest to clean.'].join('\n')
 }
 
 const cliRules: Record<string, string> = {
-  'file-role': 'Имя файла: <домен>.<роль>.ts, kebab-case (PascalCase в Kotlin/Swift, snake в Rust/SQL)',
-  'no-dump-file': 'Файлы и каталоги-свалки: utils, helpers, common, shared, lib, types, index',
-  'dir-depth': 'Глубина каталогов внутри src; иерархия от фреймворка не считается',
-  'no-dead-export': 'Экспорт, которого никто не упоминает в этом репозитории',
-  'sql-name': 'Имена таблиц, индексов и ограничений: snake_case, префиксы idx_/uq_/pk_/fk_/ck_',
-  'sql-column': 'Колонки: snake_case, _at у времени, is_/has_ у булевых, единица у чисел',
-  naming: 'Булевы префиксы и единицы измерения в Rust, Kotlin и Swift',
-  'max-lines': 'Длина файла: в файле больше одной роли',
-  'level-honesty': 'Объявленный уровень против того, что репозиторий реально держит',
-  parse: 'Файл не разобрался — правила по AST на нём не исполнялись',
+  'file-role': 'File name: <domain>.<role>.ts, kebab-case (PascalCase in Kotlin/Swift, snake_case in Rust/SQL)',
+  'no-dump-file': 'Dumping-ground files and directories: utils, helpers, common, shared, lib, types, index',
+  'dir-depth': 'Directory depth inside src; a hierarchy dictated by the framework is not counted',
+  'no-dead-export': 'An export nothing else in this repository mentions',
+  'sql-name': 'Names of tables, indexes and constraints: snake_case, prefixes idx_/uq_/pk_/fk_/ck_',
+  'sql-column': 'Columns: snake_case, _at for timestamps, is_/has_ for booleans, a unit for numbers',
+  naming: 'Boolean prefixes and units of measure in Rust, Kotlin and Swift',
+  'max-lines': 'File length: the file holds more than one role',
+  'level-honesty': 'The declared level against what the repository actually holds',
+  parse: 'The file did not parse — AST rules did not run on it',
 }
 
 /** Что проверяет правило и куда идти за развёрнутым объяснением. */
@@ -51,7 +51,7 @@ export function formatExplain(rule: string, own: Record<string, string>, docs: s
   const known = own[rule] ?? cliRules[rule]
   if (known === undefined) {
     const all = [...Object.keys(own), ...Object.keys(cliRules)].sort().join(' ')
-    return `Правила "${rule}" нет. Есть: ${all}`
+    return `No rule "${rule}". Known: ${all}`
   }
-  return `${rule}\n\n  ${known}\n\n  Полностью — ${docs}\n`
+  return `${rule}\n\n  ${known}\n\n  In full — ${docs}\n`
 }

@@ -285,10 +285,10 @@ describe('отчёты (1.2)', () => {
   })
 
   test('объяснение правила берётся из его же описания', () => {
-    const own = { 'unit-suffix': 'Числовое имя несёт единицу измерения' }
-    expect(formatExplain('unit-suffix', own, 'https://docs')).toContain('единицу измерения')
+    const own = { 'unit-suffix': 'A numeric name carries its unit of measure' }
+    expect(formatExplain('unit-suffix', own, 'https://docs')).toContain('unit of measure')
     expect(formatExplain('sql-column', own, 'https://docs')).toContain('snake_case')
-    expect(formatExplain('нет-такого', own, 'https://docs')).toContain('Есть:')
+    expect(formatExplain('нет-такого', own, 'https://docs')).toContain('Known:')
   })
 })
 

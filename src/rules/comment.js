@@ -11,17 +11,17 @@ const leftover = /^\s*(todo|fixme|hack|xxx|note)\b/i
 export const commentForm = {
   meta: {
     type: 'problem',
-    docs: { description: 'Комментарий отвечает «почему» и несёт тег' },
+    docs: { description: 'A comment answers "why" and carries a tag' },
     schema: [],
     messages: {
       untagged:
-        'GRAIN: комментарий без тега. Разрешено: {{tags}}. Если он пересказывает код — удали.',
-      leftover: 'GRAIN: «{{word}}» — это не комментарий, а незаконченная работа. Доделай или заведи задачу.',
-      divider: 'GRAIN: ASCII-разделители не структурируют код — структурирует разбиение на файлы.',
-      steps: 'GRAIN: нумерация шагов пересказывает поток управления. Удали.',
-      emoji: 'GRAIN: эмодзи в комментарии.',
-      block: 'GRAIN: блочный комментарий разрешён только как JSDoc над экспортом. Закомментированный код — удали.',
-      escape: 'GRAIN: форма escape — {{escape}} <правило> — <причина>. Причина обязательна.',
+        'GRAIN: comment without a tag. Allowed: {{tags}}. If it retells the code — delete it.',
+      leftover: 'GRAIN: "{{word}}" is not a comment but unfinished work. Finish it or file a task.',
+      divider: 'GRAIN: ASCII dividers do not structure code — splitting into files does.',
+      steps: 'GRAIN: numbered steps retell the control flow. Delete them.',
+      emoji: 'GRAIN: emoji in a comment.',
+      block: 'GRAIN: a block comment is allowed only as JSDoc above an export. Commented-out code — delete it.',
+      escape: 'GRAIN: the escape form is {{escape}} <rule> — <reason>. The reason is mandatory.',
     },
   },
   create(context) {
@@ -85,9 +85,9 @@ const loggerCall = /^(console|logger|log)$/
 export const noEmojiLog = {
   meta: {
     type: 'problem',
-    docs: { description: 'Логи без эмодзи' },
+    docs: { description: 'Logs without emoji' },
     schema: [],
-    messages: { emoji: 'GRAIN: эмодзи в логе. Лог читает grep, а не человек.' },
+    messages: { emoji: 'GRAIN: emoji in a log line. Logs are read by grep, not by a person.' },
   },
   create(context) {
     const sourceCode = context.sourceCode

@@ -57,7 +57,7 @@ export function listSynxCanonFindings(sources: Map<string, string>): Finding[] {
         makeFinding(
           [reading.file, reading.line],
           'synx-canon',
-          `${env} читается как "${reading.path}", а в других сервисах — "${String(common?.[0])}". Одно значение платформы — одно имя везде`,
+          `${env} is read as "${reading.path}" here and as "${String(common?.[0])}" elsewhere. One platform value — one name everywhere`,
         ),
       )
     }

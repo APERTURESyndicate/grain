@@ -1,6 +1,6 @@
 {
   "name": "@aperturesyndicate/grain",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "GRAIN — the APERTURESyndicate code standard: vocabularies as data, an ESLint plugin and a checker for TypeScript, Rust, SQL, Kotlin, Swift and SYNX",
   "license": "MIT",
   "type": "module",

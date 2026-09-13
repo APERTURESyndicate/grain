@@ -12,35 +12,35 @@ const timeTypes = /^(timestamptz|timestamp|date)$/i
 const units = new Set([...grain.units].map((unit) => unit.toLowerCase()))
 
 function findColumnFault(name: string, kind: string): string | null {
-  if (!snake.test(name)) return `колонка "${name}" — snake_case`
+  if (!snake.test(name)) return `column "${name}" must be snake_case`
   const words = splitWords(name)
   const first = words[0]
   const last = words[words.length - 1]
   if (last !== undefined && grain.nounsBanned.has(last)) {
-    return `колонка "${name}": слово "${last}" ничего не сообщает`
+    return `column "${name}": the word "${last}" says nothing`
   }
   if (timeTypes.test(kind) && last !== 'at') {
-    return `момент времени "${name}" — суффикс _at (created_at, expires_at)`
+    return `timestamp "${name}" needs the _at suffix (created_at, expires_at)`
   }
   if (/^(boolean|bool)$/i.test(kind) && first !== undefined && !grain.boolPrefixes.includes(first)) {
-    return `булева "${name}" — префикс ${grain.boolPrefixes.map((prefix) => `${prefix}_`).join('/')}`
+    return `boolean "${name}" needs a prefix: ${grain.boolPrefixes.map((prefix) => `${prefix}_`).join('/')}`
   }
   if (!numberTypes.test(kind) || name.endsWith('_id') || name === 'id') return null
   if (last !== undefined && (units.has(last) || grain.unitsExempt.has(last))) return null
-  return `число "${name}" без единицы — _ms, _sec, _cents, _bytes, _count, _pct`
+  return `number "${name}" has no unit — _ms, _sec, _cents, _bytes, _count, _pct`
 }
 
 function findObjectFault(line: string): string | null {
   const table = tableStart.exec(line)
   if (table !== null) {
     const name = (table[1] ?? '').split('.').pop() ?? ''
-    return snake.test(name) ? null : `таблица "${name}" — snake_case, множественное число`
+    return snake.test(name) ? null : `table "${name}" must be snake_case and plural`
   }
   const index = indexStart.exec(line)
   if (index !== null) {
     const name = index[2] ?? ''
     const wanted = index[1] === undefined ? 'idx_' : 'uq_'
-    return name.startsWith(wanted) ? null : `индекс "${name}" — префикс ${wanted}<таблица>_<колонки>`
+    return name.startsWith(wanted) ? null : `index "${name}" needs the prefix ${wanted}<table>_<columns>`
   }
   const constraint = constraintStart.exec(line)
   if (constraint === null) return null
@@ -52,7 +52,7 @@ function findObjectFault(line: string): string | null {
   }
   const wanted = prefixes[(constraint[2] ?? '').slice(0, 1).toLowerCase()] ?? ''
   const name = constraint[1] ?? ''
-  return name.startsWith(wanted) ? null : `ограничение "${name}" — префикс ${wanted}`
+  return name.startsWith(wanted) ? null : `constraint "${name}" needs the prefix ${wanted}`
 }
 
 /** SQL: имена таблиц, колонок, индексов; единицы и префиксы в схеме. */
