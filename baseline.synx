@@ -1,0 +1,30 @@
+# GRAIN 1.2 — долг, принятый как данность.
+# Гейт пропускает ровно эти нарушения и валит любое сверх них.
+# Строка: <файл> <правило> <сколько>. Перезаписывается `grain --baseline`.
+
+bin/grain.entry.ts no-vague-name 1
+bin/grain.entry.ts unit-suffix 1
+bin/grain.entry.ts verb-lexicon 1
+src/baseline.pure.ts unit-suffix 1
+src/baseline.pure.ts verb-lexicon 1
+src/check-eslint.wire.ts unit-suffix 3
+src/check-export.pure.ts max-depth 1
+src/check-level.wire.ts unit-suffix 1
+src/check-path.pure.ts no-nested-ternary 2
+src/check-synx-canon.pure.ts max-depth 1
+src/check-synx-canon.pure.ts unit-suffix 1
+src/finding.shape.ts unit-suffix 1
+src/rules/boundary.js verb-lexicon 1
+src/rules/comment.js max-depth 2
+src/rules/comment.js max-lines-per-function 2
+src/rules/contract.js no-vague-name 1
+src/rules/contract.js verb-lexicon 3
+src/rules/naming.js max-lines-per-function 1
+src/rules/naming.js verb-lexicon 5
+src/rules/units.js verb-lexicon 1
+src/vocabulary.js verb-lexicon 1
+test/rules.test.ts event-subject 1
+test/rules.test.ts fail-code 34
+test/rules.test.ts max-lines-per-function 1
+test/rules.test.ts unit-suffix 32
+test/rules.test.ts verb-lexicon 2

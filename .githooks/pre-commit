@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# GRAIN — docs/. Bypass: GRAIN_SKIP=1 git commit …
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+if [ "${GRAIN_SKIP:-0}" = "1" ]; then
+  echo "GRAIN: check skipped (GRAIN_SKIP=1)"
+  exit 0
+fi
+
+if ! command -v bun >/dev/null 2>&1; then
+  exit 0
+fi
+
+if ! bun bin/grain.entry.ts; then
+  echo ""
+  echo "Commit stopped: the code does not pass GRAIN — see docs/"
+  exit 1
+fi

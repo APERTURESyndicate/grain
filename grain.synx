@@ -1,0 +1,202 @@
+# GRAIN 1.2 — the machine source of truth.
+# The human version of the standard lives in docs/.
+# A rule that is not here is not checked. A rule that is not in the docs makes
+# no sense. Both files change together or neither does.
+#
+# A project overrides any key below in its own grain.synx at the repository root:
+# the key is replaced whole, not appended. `standard` and `version` belong here.
+
+standard GRAIN
+version 1.2
+
+# ─────────────────────────────────────────────────────────────
+# VERBS. A closed lexicon: 33 verbs, each with its own contract.
+# A function must begin with one of them. Anything else is an error.
+# ─────────────────────────────────────────────────────────────
+
+# find — may return null, never throws
+# get — guarantees a value, throws when there is none
+# list — always a collection, an empty one is not an error
+# count — a number, never null
+verbs_query find get list count
+
+# read/write — crossing the I/O boundary: network, disk, object storage
+verbs_io read write
+
+# load/save — a whole aggregate through the store (database)
+verbs_store load save
+
+# make — a pure constructor of a value, no I/O
+# derive — a pure computation from data already at hand
+# resolve — picking one option out of several by rule
+verbs_build make derive resolve
+
+# pure transformations of data shape, input → output, no state
+verbs_transform parse format encode decode normalize sign verify hash
+
+# domain mutation: changes state and produces an event
+verbs_mutate create delete archive restore
+
+# ensure — idempotently brings state to what is needed
+# assert — throws when an invariant is broken, otherwise void
+# apply — lays a ready change onto a target
+# set — assigns a value, no side effects further down the system
+verbs_state ensure assert apply set
+
+# emit — onto the bus, recipient unknown; send — to a specific recipient
+verbs_signal emit send
+
+# lifecycle of a process or subsystem
+verbs_life start stop
+
+# UI code only: hooks, wrappers, rendering
+verbs_ui use with render
+
+# Banned verbs. Each one is a sign that the name does not describe the action.
+verbs_banned handle process manage do perform execute check init update fetch retrieve calculate compute generate build setup validate transform convert prepare determine deal run trigger
+
+# An event is an accomplished fact, not a command: a subject and a participle.
+# The tail of a subject v1.{domain}.{subject}.{what happened} comes from here.
+event_verbs activated added approved archived banned cancelled changed created decided deleted
+event_verbs enrolled executed expired failed followed granted liked normalized paid played
+event_verbs published purchased read refunded registered removed requested restored revoked scanned
+event_verbs submitted unlocked updated uploaded verified
+
+# ─────────────────────────────────────────────────────────────
+# UNITS. A number without a unit suffix is an error.
+# ─────────────────────────────────────────────────────────────
+
+units_time At Ms Sec Min Hours Days
+units_size Bytes Kb Mb Gb
+units_money Cents
+units_ratio Ratio Pct
+units_count Count Index
+units_domain Px Deg Hz Bpm Db
+
+# Dimensionless quantities that need no suffix.
+units_exempt x y z id width height depth port page limit offset version priority
+
+# Properties of a foreign coordinate system: inside them the contract sets the unit, not the author.
+units_foreign style
+
+# ─────────────────────────────────────────────────────────────
+# BOOLEANS. A closed set of prefixes, nothing else.
+# ─────────────────────────────────────────────────────────────
+
+bool_prefixes is has can should was will must
+
+# ─────────────────────────────────────────────────────────────
+# NAMES. Words that say nothing about the content.
+# ─────────────────────────────────────────────────────────────
+
+nouns_banned data info obj object temp tmp stuff misc thing things res ret arr str num flag val result helper handler manager wrapper util utils
+
+# The only abbreviations allowed. Everything else is written in full.
+abbreviations id url uri db io rpc ttl utc api sql css html json jwt s3 ip dns cdn ui ms
+
+# Abbreviations that stand for a whole word: write the word.
+abbrev_fix cfg=config usr=user req=request res=response msg=message err=error idx=index btn=button img=image src=source dst=target dest=target val=value arr=list str=text num=number cnt=count prev=previous curr=current attr=attribute elem=element evt=event fn=action cb=action opts=options args=arguments desc=description doc=document acc=accumulator
+
+# Self-praise: a marker of generated code, carries no meaning.
+adjectives_banned enhanced advanced comprehensive ultimate robust powerful seamless smart intelligent optimized improved modern simple easy quick
+
+# ─────────────────────────────────────────────────────────────
+# FILES. Every file has one role from a closed list.
+# ─────────────────────────────────────────────────────────────
+
+# <name>.<role>.ts — the role is visible in a directory listing without opening the file
+file_roles entry route rpc store wire policy shape event job pure
+
+# Dumping-ground names. A file with such a name always holds two unrelated things.
+files_banned utils util helpers helper common shared misc lib main types constants service manager handler index
+
+# Names dictated by a framework: they cannot be renamed, the role is implied.
+files_framework page layout template loading error not-found global-error route middleware sitemap robots opengraph-image icon apple-icon manifest default instrumentation mod build
+
+# The public entry point of a package: <pkg>/src/public.ts
+file_public public
+
+# Directories whose nesting is not the author's choice: under src/app it is the URL,
+# under src/*/kotlin — the package path, under Sources — the SPM layout. Depth is not counted there.
+dirs_framework app pages kotlin java Sources
+
+# Dumping-ground directories: the name describes the technique, not the domain.
+dirs_banned utils helpers common shared misc lib core stuff services controllers managers handlers
+
+# ─────────────────────────────────────────────────────────────
+# COMMENTS. Five tags, nothing else.
+# ─────────────────────────────────────────────────────────────
+
+# why — why this way and not the obvious one
+# perf — a measured reason for a non-obvious decision
+# safety — a security invariant that must not be broken by an edit
+# spec — a reference to an external specification
+# ref — a reference to an incident, a task, a discussion
+comment_tags why perf safety spec ref
+
+# The escape hatch: // grain:allow <rule> — <reason>. The reason is mandatory.
+comment_escape grain:allow
+
+# ─────────────────────────────────────────────────────────────
+# SHAPE. Numbers backed by readability, not by taste.
+# ─────────────────────────────────────────────────────────────
+
+max_nesting 2
+max_params 3
+max_function_lines 40
+max_file_lines 400
+max_dir_depth 3
+
+# A domain failure code: <domain>.<subject>.<reason>
+fail_code_pattern ^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*){2}$
+
+# ─────────────────────────────────────────────────────────────
+# LEVELS. L1/L2 — the set of rules, L3 — the machine guarantee.
+# A project declares its level with the `level` key; the checker refuses to
+# declare more than the project actually holds.
+# ─────────────────────────────────────────────────────────────
+
+# L1 "Readability": adopted in an evening, breaks habits rather than architecture.
+level_1 verb-lexicon unit-suffix boolean-prefix comment-form no-dump-file no-emoji-log naming sql-column sql-name synx-key
+
+# L2 "Contracts": the full standard.
+level_2 event-subject synx-canon find-get-contract file-role dir-depth max-lines no-vague-name fail-code catch-must-act no-default-export no-redundant-temp boundary-effect inward-import explicit-parallel no-dead-export
+
+# L3 "Discipline" — the rules of L2 plus: a check in CI, a blocking pre-commit,
+#   `adopt` covering all the project's code, not a single GRAIN_SKIP in history.
+
+level 2
+
+# The public page of the standard and the level badges.
+docs_url https://docs.aperturesyndicate.com/en/grain/overview
+badge_url https://docs.aperturesyndicate.com/badge
+
+# Boundary roles: only here are time, randomness and the environment taken.
+roles_boundary entry route rpc job wire
+
+# What may import what: <role>=<roles, comma-separated>
+imports_allowed pure=pure,shape policy=pure,shape,policy shape=shape store=shape,pure,store wire=shape,pure,wire event=shape,pure,event
+
+# Sources of nondeterminism: inside the domain they arrive as arguments, never taken directly.
+effects_nondeterministic Date.now Math.random crypto.randomUUID process.env performance.now
+
+# Extensions the checker opens at all.
+files_checked ts tsx js jsx rs sql kt swift synx
+
+# SYNX is sometimes a config and sometimes data: a cosmetics catalogue, game balance
+# or format samples live by the vocabulary of their domain, not this one.
+# Naming discipline is asked only of configs — these are they.
+synx_config app.synx values.synx platform.synx
+
+# Paths where the standard does not and cannot apply: build output, dependencies,
+# generated code. A database migration is frozen history: an applied one cannot be
+# rewritten, and its index names and comments are written by the generator, not the author.
+paths_ignored node_modules .git dist build out target .next .turbo coverage vendor drizzle migrations
+
+# ─────────────────────────────────────────────────────────────
+# ADOPTION. Paths on which GRAIN is mandatory. Empty — the whole repository.
+# Debt accumulated before the standard was switched on is recorded in
+# baseline.synx: the gate lets exactly that through and fails anything beyond.
+# ─────────────────────────────────────────────────────────────
+
+adopt

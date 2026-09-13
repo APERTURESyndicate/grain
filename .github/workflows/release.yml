@@ -1,0 +1,107 @@
+name: release
+
+# Driven by a `v*.*.*` tag. Publishes the package to npm and creates a GitHub Release.
+# Required repository secret: NPM_TOKEN (npmjs.com automation token).
+# Tag format must match `vMAJOR.MINOR.PATCH` and equal the version in package.json.
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build and validate, but do not publish'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IS_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+
+jobs:
+  publish-npm:
+    name: Publish → npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Self-test
+        run: bun test
+
+      - name: Tag matches package version
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          ver="$(node -p "require('./package.json').version")"
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$ver" != "$tag" ]; then
+            echo "::error::package.json is $ver, tag is $tag"
+            exit 1
+          fi
+
+      - name: Manifest has no BOM
+        run: |
+          set -euo pipefail
+          if [ "$(head -c 3 package.json | od -An -tx1 | tr -d ' \n')" = "efbbbf" ]; then
+            echo "::error::package.json starts with a UTF-8 BOM"
+            exit 1
+          fi
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ "$IS_DRY_RUN" = "true" ]; then
+            npm publish --dry-run --access public
+            exit 0
+          fi
+          pkg="$(node -p "require('./package.json').name")"
+          ver="$(node -p "require('./package.json').version")"
+          if npm view "${pkg}@${ver}" version >/dev/null 2>&1; then
+            echo "::notice title=Already published::${pkg} ${ver} is already on npm — nothing to do"
+            exit 0
+          fi
+          npm publish --access public --provenance
+
+  github-release:
+    name: GitHub Release
+    needs: publish-npm
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Release notes from CHANGELOG
+        run: |
+          set -euo pipefail
+          ver="${GITHUB_REF_NAME#v}"
+          awk -v ver="$ver" '
+            $0 ~ "^## " ver "$" { on = 1; next }
+            /^## / && on { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Release $ver" > notes.md
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
