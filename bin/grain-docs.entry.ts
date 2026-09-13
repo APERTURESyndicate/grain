@@ -20,9 +20,38 @@ function formatVerbs(): string {
   return groups.map(([label, key]) => formatLine(label, grain.verbGroups[key] ?? [])).join('\n')
 }
 
+// why: подсказки чекера на английском, а карточка — на русском: словарь один,
+// а язык подписи задаёт документ
+const replacementsRu: Record<string, string> = {
+  handle: 'назови действие: submitLogin, retryPayout',
+  process: 'derive / apply / transform-глагол по существу',
+  manage: 'разбей на конкретные действия',
+  do: 'назови действие',
+  perform: 'назови действие',
+  execute: 'apply / start',
+  check: 'is* для ответа, assert* для инварианта',
+  init: 'start (процесс) / make (значение)',
+  update: 'save / apply / set',
+  fetch: 'read (I/O) / load (агрегат)',
+  retrieve: 'get / find',
+  calculate: 'derive',
+  compute: 'derive',
+  generate: 'make',
+  build: 'make',
+  setup: 'ensure / start',
+  validate: 'assert (бросает) / parse (возвращает разбор)',
+  transform: 'derive / format',
+  convert: 'format / encode',
+  prepare: 'make',
+  determine: 'resolve',
+  deal: 'назови действие',
+  run: 'start / apply',
+  trigger: 'emit / send',
+}
+
 function formatBanned(): string {
   return [...grain.verbsBanned]
-    .map((verb) => `\`${verb}*\` → ${grain.verbReplacements[verb] ?? 'назови действие по существу'}`)
+    .map((verb) => `\`${verb}*\` → ${replacementsRu[verb] ?? 'назови действие по существу'}`)
     .join('; ')
 }
 
